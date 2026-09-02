@@ -6,8 +6,11 @@ from pathlib import Path
 import requests
 
 ROOT = Path(__file__).resolve().parent.parent
-BASE = "http://ilse.martiendejong.nl"
-UA = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/128.0 Safari/537.36"}
+BASE = "http://185.104.29.170"
+UA = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/128.0 Safari/537.36",
+    "Host": "ilse.martiendejong.nl",
+}
 BATCH = 20
 
 EXPECTED = {"release": 60, "song": 161, "artist": 2, "appearance": 24, "page": 6, "legacy_routes": 283}

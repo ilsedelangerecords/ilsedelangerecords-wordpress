@@ -115,6 +115,9 @@ add_action( 'rest_api_init', function () {
 
 /** Upsert een batch records. Idempotent op _idr_id. */
 function idr_handle_import( WP_REST_Request $req ) {
+	// De import draait zonder ingelogde gebruiker; zonder dit stript kses de
+	// legacy-iframes (YouTube-embeds) uit de content. Het endpoint is token-beveiligd.
+	kses_remove_filters();
 	$items   = $req->get_json_params()['items'] ?? [];
 	$results = [];
 	foreach ( $items as $item ) {

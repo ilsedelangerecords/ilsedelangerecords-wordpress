@@ -18,8 +18,26 @@ import requests  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
 ASTRO_MEDIA = Path(r"E:\projects\ilsedelange-records-astro\public\media\original")
-BASE = "http://ilse.martiendejong.nl"
-UA = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/128.0 Safari/537.36"}
+# Rechtstreeks naar het server-IP met Host-header: DNS-onafhankelijk (lokale resolver
+# haperde tijdens de eerste run) en werkt ook voordat DNS gepropageerd is.
+BASE = "http://185.104.29.170"
+UA = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/128.0 Safari/537.36",
+    "Host": "ilse.martiendejong.nl",
+}
+
+
+def http_get(url, **kwargs):
+    import time
+    last = None
+    for attempt in range(5):
+        try:
+            return requests.get(url, **kwargs)
+        except requests.exceptions.RequestException as e:
+            last = e
+            print(f"  http-retry {attempt + 1}: {type(e).__name__}")
+            time.sleep(5 * (attempt + 1))
+    raise last
 
 
 class ReusedSslFTP(ftplib.FTP_TLS):
@@ -130,8 +148,8 @@ def do_media(ftp, token):
         name = f"blobs-{idx}.zip"
         print(f"  chunk {idx}: {len(chunk)} files, {len(data) // 1048576} MB uploaden...")
         upload_bytes(ftp, f"public_html/media/{name}", data)
-        r = requests.get(f"{BASE}/idr-extract.php", params={"token": token, "zip": name},
-                         timeout=600, headers=UA)
+        r = http_get(f"{BASE}/idr-extract.php", params={"token": token, "zip": name},
+                     timeout=600, headers=UA)
         print("  extract:", r.status_code, r.text[:100])
         if not r.text.startswith("OK"):
             sys.exit("EXTRACT MISLUKT")
@@ -161,7 +179,7 @@ def main():
         do_media(ftp, token)
 
     print("activeren...")
-    r = requests.get(f"{BASE}/idr-activate.php", params={"token": token}, timeout=120, headers=UA)
+    r = http_get(f"{BASE}/idr-activate.php", params={"token": token}, timeout=120, headers=UA)
     print("  ", r.status_code, r.text[:300])
 
     for shim in ("idr-activate.php", "idr-extract.php"):
