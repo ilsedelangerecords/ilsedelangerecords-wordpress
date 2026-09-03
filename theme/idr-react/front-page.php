@@ -2,7 +2,7 @@
 
 <section class="hero">
 	<div class="wrap">
-		<h1>Elke release, elke single, elke songtekst &mdash; gedocumenteerd.</h1>
+		<h1>Elke release, elke single, elke songtekst. Gedocumenteerd.</h1>
 		<p>Het complete verzamelarchief van Ilse DeLange en The Common Linnets: albums, singles, live-registraties, promo-items en lyrics, met hoezen en persingen uit de collectie.</p>
 		<p class="actions">
 			<a class="btn solid" href="<?php echo esc_url( get_post_type_archive_link( 'idr_release' ) ); ?>">Blader door de releases</a>
@@ -22,6 +22,14 @@
 					'tax_query' => [ [ 'taxonomy' => 'idr_artist_tax', 'field' => 'slug', 'terms' => $profile['term'] ] ],
 				] ) );
 				$cover = idr_cover_url( $post->ID );
+				if ( ! $cover ) {
+					$fallback = get_posts( [
+						'post_type' => 'idr_release', 'posts_per_page' => 1, 'meta_key' => '_idr_year',
+						'orderby' => 'meta_value_num', 'order' => 'DESC',
+						'tax_query' => [ [ 'taxonomy' => 'idr_artist_tax', 'field' => 'slug', 'terms' => $profile['term'] ] ],
+					] );
+					$cover = $fallback ? idr_cover_url( $fallback[0]->ID ) : '';
+				}
 				?>
 				<a class="artist-card" href="<?php echo esc_url( get_permalink( $post ) ); ?>">
 					<?php if ( $cover ) : ?><img src="<?php echo esc_url( $cover ); ?>" alt="" loading="lazy"><?php endif; ?>
