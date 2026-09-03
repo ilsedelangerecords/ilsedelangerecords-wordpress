@@ -14,7 +14,7 @@
 		<div>
 			<h1><?php echo esc_html( idr_display_title() ); ?></h1>
 			<p class="byline">
-				<?php echo esc_html( wp_get_post_terms( get_the_ID(), 'idr_artist_tax', [ 'fields' => 'names' ] )[0] ?? '' ); ?>
+				<?php echo esc_html( idr_artist_label() ); ?>
 				<?php if ( idr_meta( 'language' ) ) : ?>
 					&middot; <span class="badge"><?php echo esc_html( strtoupper( idr_meta( 'language' ) ) ); ?></span>
 				<?php endif; ?>

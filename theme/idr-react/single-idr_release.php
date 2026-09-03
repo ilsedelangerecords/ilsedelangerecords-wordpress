@@ -15,8 +15,7 @@
 			<h1><?php echo esc_html( idr_display_title() ); ?></h1>
 			<p class="byline">
 				<?php
-				$artist = wp_get_post_terms( get_the_ID(), 'idr_artist_tax', [ 'fields' => 'names' ] )[0] ?? '';
-				echo esc_html( $artist );
+				echo esc_html( idr_artist_label() );
 				$format = idr_meta( 'format' );
 				if ( $format && 'unknown' !== $format ) { echo ' &middot; ' . esc_html( ucfirst( $format ) ); }
 				?>

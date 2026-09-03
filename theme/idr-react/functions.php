@@ -104,6 +104,12 @@ add_action( 'wp_head', function () {
 	}
 } );
 
+/** Nette artiestnaam uit de facet-term (slug -> weergavenaam). */
+function idr_artist_label( $post_id = null ) {
+	$slug = wp_get_post_terms( $post_id ?: get_the_ID(), 'idr_artist_tax', [ 'fields' => 'slugs' ] )[0] ?? '';
+	return 'the-common-linnets' === $slug ? 'The Common Linnets' : ( $slug ? 'Ilse DeLange' : '' );
+}
+
 /** Songrij met taal/lyrics-badges. */
 function idr_song_row( $post ) {
 	$lang = function_exists( 'idr_meta' ) ? idr_meta( 'language', $post->ID ) : '';
