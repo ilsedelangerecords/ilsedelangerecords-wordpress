@@ -24,7 +24,9 @@
 				<p><a class="btn spotify-btn" href="<?php echo esc_url( idr_meta( 'spotify_url' ) ); ?>" rel="noopener">&#9654; Luister op Spotify</a></p>
 			<?php endif; ?>
 
-			<div class="legacy-content"><?php the_content(); ?></div>
+			<div class="legacy-content lyrics"><?php the_content(); ?></div>
+
+			<?php idr_render_gallery(); ?>
 
 			<?php $related = idr_related_posts(); ?>
 			<?php if ( $related ) : ?>

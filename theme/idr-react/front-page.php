@@ -12,6 +12,29 @@
 </section>
 
 <div class="wrap">
+	<section class="section">
+		<div class="artist-cards">
+			<?php foreach ( idr_artist_profiles() as $idr_id => $profile ) :
+				$post = idr_post_by_idr_id( $idr_id );
+				if ( ! $post ) { continue; }
+				$count = count( get_posts( [
+					'post_type' => [ 'idr_release', 'idr_appearance' ], 'posts_per_page' => -1, 'fields' => 'ids',
+					'tax_query' => [ [ 'taxonomy' => 'idr_artist_tax', 'field' => 'slug', 'terms' => $profile['term'] ] ],
+				] ) );
+				$cover = idr_cover_url( $post->ID );
+				?>
+				<a class="artist-card" href="<?php echo esc_url( get_permalink( $post ) ); ?>">
+					<?php if ( $cover ) : ?><img src="<?php echo esc_url( $cover ); ?>" alt="" loading="lazy"><?php endif; ?>
+					<span class="artist-card-body">
+						<strong><?php echo esc_html( $profile['name'] ); ?></strong>
+						<span><?php echo esc_html( $profile['tagline'] ); ?></span>
+						<span class="badge"><?php echo (int) $count; ?> releases in het archief</span>
+					</span>
+				</a>
+			<?php endforeach; ?>
+		</div>
+	</section>
+
 	<?php
 	$recent = get_posts( [
 		'post_type'      => 'idr_release',

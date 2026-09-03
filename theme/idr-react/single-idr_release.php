@@ -59,6 +59,8 @@
 					<div class="legacy-content"><?php echo wp_kses_post( $info ); ?></div>
 				</section>
 			<?php endif; ?>
+
+			<?php idr_render_gallery(); ?>
 		</div>
 	</article>
 </div>

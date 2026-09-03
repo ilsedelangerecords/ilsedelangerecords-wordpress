@@ -68,14 +68,23 @@ def cover_image(page):
     return media[0] if media else None
 
 
-def clean_html(page, chrome_urls):
+def clean_html(page, chrome_urls, strip_images=True):
+    """Legacy-HTML naar toonbare tekstcontent.
+
+    Bovenop de astro-opschoning (maps weg, chrome-images weg, YouTube-embeds
+    gefixt): alle images eruit (de galerij rendert uit _idr_media), dode
+    astro-links (/collection/...) eruit (relaties staan al in _idr_related),
+    mojibake (U+FFFD) weg en lege restanten ingeklapt.
+    """
     html = page["html"]
     html = re.sub(r"<map\b[^>]*>[\s\S]*?</map>", "", html, flags=re.I)
 
-    def img_filter(match):
-        return "" if match.group(1) in chrome_urls else match.group(0)
-
-    html = re.sub(r'<img\b[^>]*\bsrc="([^"]+)"[^>]*>', img_filter, html, flags=re.I)
+    if strip_images:
+        html = re.sub(r'<img\b[^>]*>', "", html, flags=re.I)
+    else:
+        def img_filter(match):
+            return "" if match.group(1) in chrome_urls else match.group(0)
+        html = re.sub(r'<img\b[^>]*\bsrc="([^"]+)"[^>]*>', img_filter, html, flags=re.I)
 
     def iframe_fix(match):
         src = match.group(1)
@@ -85,7 +94,18 @@ def clean_html(page, chrome_urls):
         return ('<iframe class="legacy-embed" src="https://www.youtube-nocookie.com/embed/'
                 + video.group(1) + '?rel=0" title="Archive video" loading="lazy" allowfullscreen></iframe>')
 
-    return re.sub(r'<iframe\b[^>]*\bsrc="([^"]+)"[^>]*></iframe>', iframe_fix, html, flags=re.I)
+    html = re.sub(r'<iframe\b[^>]*\bsrc="([^"]+)"[^>]*></iframe>', iframe_fix, html, flags=re.I)
+
+    # dode interne astro-links (incl. inhoud): de Information/related-knoppen
+    # komen uit _idr_related, dus het hele anker mag weg
+    html = re.sub(r'<a\b[^>]*\bhref="/collection/[^"]*"[^>]*>[\s\S]*?</a>', "", html, flags=re.I)
+    # mojibake uit de bron (U+FFFD, vaak als scheidingsteken)
+    html = html.replace("�", "")
+    # lege restanten inklappen
+    for _ in range(3):
+        html = re.sub(r"<(p|div|span)\b[^>]*>\s*(?:<br\s*/?>\s*)*</\1>", "", html, flags=re.I)
+    html = re.sub(r"(?:<br\s*/?>\s*){3,}", "<br><br>", html, flags=re.I)
+    return html.strip()
 
 
 def main():
@@ -194,12 +214,16 @@ def main():
             and link["targetId"] not in nav_page_ids and link["targetId"] != pid
         ]
         sp = spotify.get(pid) or {}
+        page_media = [
+            {**m, "alt": re.sub(r"\s*�\s*", " · ", m.get("alt", "")).strip()}
+            for m in content_media(page)
+        ]
         meta = {
             "year": f["year"], "released_text": f["released_text"], "label": f["label"],
             "catalog_number": f["catalog_number"], "format": f["format"],
             "spotify_url": sp.get("url"), "spotify_name": sp.get("name"),
             "cover": cover["url"] if cover else None,
-            "media": content_media(page) or None,
+            "media": page_media or None,
             "related": related or None,
             "display_title": display_title(page),
             "legacy_filename": page["source"]["legacyFilename"],
