@@ -11,6 +11,9 @@ require_once __DIR__ . '/parts-gallery.php';
 add_action( 'wp_enqueue_scripts', function () {
 	wp_enqueue_style( 'idr', get_stylesheet_uri(), [], wp_get_theme()->get( 'Version' ) );
 	wp_enqueue_script( 'idr-motion', get_template_directory_uri() . '/motion.js', [], wp_get_theme()->get( 'Version' ), true );
+	if ( is_front_page() ) {
+		wp_enqueue_script( 'idr-hero-video', get_template_directory_uri() . '/hero-video.js', [], wp_get_theme()->get( 'Version' ), true );
+	}
 	if ( is_singular( [ 'idr_release', 'idr_song', 'idr_appearance', 'idr_artist', 'idr_page' ] ) ) {
 		wp_enqueue_script( 'idr-gallery', get_template_directory_uri() . '/gallery.js', [], wp_get_theme()->get( 'Version' ), true );
 	}

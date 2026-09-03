@@ -69,7 +69,25 @@ img { max-width: 100%; height: auto; }
 .head-search input[type=search]:focus { outline: 2px solid var(--brass); outline-offset: 1px; }
 
 /* ── Hero: hoesflap met draaiend middenlabel ── */
-.hero { background: var(--vinyl); color: var(--paper); border-bottom: 4px solid var(--brass); }
+.hero { background: var(--vinyl); color: var(--paper); border-bottom: 4px solid var(--brass); position: relative; overflow: hidden; }
+.hero .wrap { position: relative; z-index: 3; }
+
+/* achtergrondvideo: YouTube-letterbox valt weg tegen de vinyl-scrim */
+.hero-video { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
+.hero-video iframe {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  width: max(100%, 178vh); height: max(100%, 56.25vw); border: 0;
+}
+.hero-scrim { position: absolute; inset: 0; z-index: 2; background: color-mix(in srgb, var(--vinyl) 72%, transparent); }
+.sound-toggle {
+  position: absolute; top: 18px; right: 18px; z-index: 4;
+  font-family: var(--grotesk); font-size: var(--fs-caps); letter-spacing: var(--track-caps);
+  text-transform: uppercase; font-weight: 600; cursor: pointer;
+  background: color-mix(in srgb, var(--vinyl) 55%, transparent); color: var(--paper);
+  border: 1px solid var(--line-dark); padding: 9px 16px 8px;
+}
+.sound-toggle:hover { border-color: var(--brass); color: var(--brass); }
+@media (prefers-reduced-motion: reduce) { .hero-video, .sound-toggle { display: none; } }
 .hero .wrap { display: grid; grid-template-columns: 1fr auto; gap: 40px; align-items: center; padding: 56px 24px 52px; }
 @media (max-width: 800px) { .hero .wrap { grid-template-columns: 1fr; } }
 .hero .eyebrow { color: var(--brass); margin: 0 0 14px; }

@@ -4,7 +4,20 @@ $song_count    = (int) wp_count_posts( 'idr_song' )->publish;
 $appearance_count = (int) wp_count_posts( 'idr_appearance' )->publish;
 ?>
 
-<section class="hero">
+<?php
+// Achtergrondvideo's: geverifieerd embedbare officiële clips (03-09-2026).
+$hero_videos = [ 'hkrF8uC92O4', 'n6MVcBM4P74', 'hOjFQCGKDZA', '8pP0y9HdHz8', 'paa2NRBA7eU' ];
+$hero_src = 'https://www.youtube-nocookie.com/embed/' . $hero_videos[0]
+	. '?autoplay=1&mute=1&controls=0&loop=1&playlist=' . implode( ',', $hero_videos )
+	. '&rel=0&iv_load_policy=3&modestbranding=1&playsinline=1&enablejsapi=1&origin=' . rawurlencode( home_url() );
+?>
+<section class="hero has-video">
+	<div class="hero-video" aria-hidden="true">
+		<iframe id="idr-hero-video" src="<?php echo esc_url( $hero_src ); ?>"
+			title="" tabindex="-1" allow="autoplay; encrypted-media" frameborder="0"></iframe>
+	</div>
+	<div class="hero-scrim" aria-hidden="true"></div>
+	<button type="button" class="sound-toggle" id="idr-sound" aria-pressed="false">Geluid aan</button>
 	<div class="wrap">
 		<div>
 			<p class="caps eyebrow">Het platenarchief &middot; sinds de eerste persing</p>
