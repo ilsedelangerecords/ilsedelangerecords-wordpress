@@ -1,15 +1,53 @@
-<?php get_header(); ?>
+<?php get_header();
+$release_count = (int) wp_count_posts( 'idr_release' )->publish;
+$song_count    = (int) wp_count_posts( 'idr_song' )->publish;
+$appearance_count = (int) wp_count_posts( 'idr_appearance' )->publish;
+?>
 
 <section class="hero">
 	<div class="wrap">
-		<h1>Elke release, elke single, elke songtekst. Gedocumenteerd.</h1>
-		<p>Het complete verzamelarchief van Ilse DeLange en The Common Linnets: albums, singles, live-registraties, promo-items en lyrics, met hoezen en persingen uit de collectie.</p>
-		<p class="actions">
-			<a class="btn solid" href="<?php echo esc_url( get_post_type_archive_link( 'idr_release' ) ); ?>">Blader door de releases</a>
-			<a class="btn" href="<?php echo esc_url( get_post_type_archive_link( 'idr_song' ) ); ?>">Lyrics &amp; songs</a>
-		</p>
+		<div>
+			<p class="caps eyebrow">Het platenarchief &middot; sinds de eerste persing</p>
+			<h1>Elke release, elke persing, elke songtekst. <em>Gedocumenteerd.</em></h1>
+			<p>Het verzamelarchief van Ilse DeLange en The Common Linnets: albums, singles, live-registraties, promo-items en lyrics, met de hoezen en persingen uit de collectie.</p>
+			<p class="actions">
+				<a class="btn solid" href="<?php echo esc_url( get_post_type_archive_link( 'idr_release' ) ); ?>">Blader door de collectie</a>
+				<a class="btn" href="<?php echo esc_url( get_post_type_archive_link( 'idr_song' ) ); ?>">Lyrics &amp; songs</a>
+			</p>
+			<div class="stats">
+				<div><strong><?php echo $release_count; ?></strong><span>releases</span></div>
+				<div><strong><?php echo $song_count; ?></strong><span>songs</span></div>
+				<div><strong><?php echo $appearance_count; ?></strong><span>gastbijdragen</span></div>
+				<div><strong>3.236</strong><span>scans in de collectie</span></div>
+			</div>
+		</div>
+		<div class="center-label" aria-hidden="true">
+			<svg viewBox="0 0 250 250">
+				<defs>
+					<path id="labelring" d="M 125,125 m -75,0 a 75,75 0 1,1 150,0 a 75,75 0 1,1 -150,0"/>
+				</defs>
+				<text><textPath href="#labelring">Ilse DeLange Records &#183; het discografie-archief &#183; 45 RPM &#183;</textPath></text>
+			</svg>
+		</div>
 	</div>
 </section>
+
+<nav class="section-rail" aria-label="Secties van het archief">
+	<div class="wrap">
+		<?php
+		$rail = get_terms( [ 'taxonomy' => 'idr_section', 'hide_empty' => true ] );
+		$order = [ 'Album', 'Singles', 'Live', 'Other artist', 'Various artist', 'Items', 'Lyrics',
+		           'TCL album', 'TCL singles', 'TCL other', 'TCL various', 'TCL lyrics' ];
+		usort( $rail, function ( $a, $b ) use ( $order ) {
+			$pa = array_search( $a->name, $order, true ); $pb = array_search( $b->name, $order, true );
+			return ( false === $pa ? 99 : $pa ) <=> ( false === $pb ? 99 : $pb );
+		} );
+		foreach ( $rail as $term ) :
+			?>
+			<a href="<?php echo esc_url( get_term_link( $term ) ); ?>"><?php echo esc_html( $term->name ); ?></a>
+		<?php endforeach; ?>
+	</div>
+</nav>
 
 <div class="wrap">
 	<section class="section">
@@ -55,8 +93,8 @@
 		?>
 		<section class="section">
 			<div class="section-head">
-				<h2>Recente releases</h2>
-				<a href="<?php echo esc_url( get_post_type_archive_link( 'idr_release' ) ); ?>">Alle <?php echo (int) wp_count_posts( 'idr_release' )->publish; ?> releases &rarr;</a>
+				<h2>Recent in de collectie</h2>
+				<a href="<?php echo esc_url( get_post_type_archive_link( 'idr_release' ) ); ?>">Alle <?php echo $release_count; ?> releases &rarr;</a>
 			</div>
 			<div class="grid">
 				<?php foreach ( $recent as $p ) { idr_card( $p ); } ?>

@@ -48,8 +48,11 @@ function idr_cover_url( $post_id = null ) {
 function idr_card( $post ) {
 	$cover = idr_cover_url( $post->ID );
 	$title = function_exists( 'idr_display_title' ) ? idr_display_title( $post->ID ) : get_the_title( $post );
-	$year  = function_exists( 'idr_meta' ) ? idr_meta( 'year', $post->ID ) : '';
+	$year   = function_exists( 'idr_meta' ) ? idr_meta( 'year', $post->ID ) : '';
 	$format = function_exists( 'idr_meta' ) ? idr_meta( 'format', $post->ID ) : '';
+	$catno  = function_exists( 'idr_meta' ) ? idr_meta( 'catalog_number', $post->ID ) : '';
+	$sub    = trim( ( $year ? $year . ' · ' : '' ) . ucfirst( 'unknown' === $format ? '' : $format ), ' ·' );
+	if ( $catno ) { $sub = trim( $sub . ( $sub ? ' · ' : '' ) . $catno, ' ·' ); }
 	?>
 	<a class="card" href="<?php echo esc_url( get_permalink( $post ) ); ?>">
 		<span class="cover<?php echo $cover ? '' : ' empty'; ?>">
@@ -58,7 +61,7 @@ function idr_card( $post ) {
 			<?php else : ?>&#9834;<?php endif; ?>
 		</span>
 		<h3><?php echo esc_html( $title ); ?></h3>
-		<span class="sub"><?php echo esc_html( trim( ( $year ? $year . ' · ' : '' ) . ucfirst( $format ?: '' ), ' ·' ) ); ?></span>
+		<span class="sub"><?php echo esc_html( $sub ); ?></span>
 	</a>
 	<?php
 }

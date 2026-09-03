@@ -1,4 +1,5 @@
 <footer class="site-foot">
+	<p class="closer">Verzameld door fans, persing voor persing.</p>
 	<div class="wrap">
 		<span>&copy; <?php echo esc_html( gmdate( 'Y' ) ); ?> ilsedelangerecords.nl &middot; fan-archief, geen officiële site</span>
 		<span><?php echo (int) wp_count_posts( 'idr_release' )->publish; ?> releases &middot; <?php echo (int) wp_count_posts( 'idr_song' )->publish; ?> songs &middot; <?php echo (int) wp_count_posts( 'idr_appearance' )->publish; ?> gastbijdragen</span>
