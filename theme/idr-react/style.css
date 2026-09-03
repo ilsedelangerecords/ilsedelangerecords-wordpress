@@ -234,3 +234,78 @@ main .btn:hover, .record .btn:hover { background: var(--vinyl); color: var(--pap
 
 .prose { max-width: 680px; }
 :focus-visible { outline: 2px solid var(--brass); outline-offset: 2px; }
+
+/* ── Motion: één georkestreerde entree + rustige reveals ── */
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes rise { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+
+  /* hero-entree: eyebrow -> kop -> tekst -> knoppen -> cijfers -> label */
+  .hero .eyebrow { animation: rise .55s .05s cubic-bezier(.22,.8,.35,1) both; }
+  .hero h1 { animation: rise .6s .15s cubic-bezier(.22,.8,.35,1) both; }
+  .hero p:not(.eyebrow):not(.actions) { animation: rise .6s .28s cubic-bezier(.22,.8,.35,1) both; }
+  .hero .actions { animation: rise .6s .4s cubic-bezier(.22,.8,.35,1) both; }
+  .hero .stats { animation: rise .7s .55s cubic-bezier(.22,.8,.35,1) both; }
+  @keyframes labelfade { to { opacity: 1; } }
+  .center-label { opacity: 0; animation: spin 24s linear infinite, labelfade .9s .5s ease both; }
+
+  /* kaarten en rijen: gespreide binnenkomst (werkt ook voor de React-island) */
+  .grid > * { animation: rise .5s both cubic-bezier(.22,.8,.35,1); }
+  .grid > *:nth-child(2)  { animation-delay: .04s; }
+  .grid > *:nth-child(3)  { animation-delay: .08s; }
+  .grid > *:nth-child(4)  { animation-delay: .12s; }
+  .grid > *:nth-child(5)  { animation-delay: .16s; }
+  .grid > *:nth-child(6)  { animation-delay: .2s; }
+  .grid > *:nth-child(7)  { animation-delay: .24s; }
+  .grid > *:nth-child(8)  { animation-delay: .28s; }
+  .grid > *:nth-child(9)  { animation-delay: .32s; }
+  .grid > *:nth-child(10) { animation-delay: .36s; }
+  .grid > *:nth-child(11) { animation-delay: .4s; }
+  .grid > *:nth-child(n+12) { animation-delay: .44s; }
+  .artist-cards > * { animation: rise .55s both cubic-bezier(.22,.8,.35,1); }
+  .artist-cards > *:nth-child(2) { animation-delay: .1s; }
+
+  /* scroll-reveal: motion.js zet .reveal en voegt .in toe */
+  .reveal { opacity: 0; transform: translateY(18px); transition: opacity .6s cubic-bezier(.22,.8,.35,1), transform .6s cubic-bezier(.22,.8,.35,1); }
+  .reveal.in { opacity: 1; transform: none; }
+
+  /* hover-micro-interacties */
+  .card .cover img { transition: transform .35s cubic-bezier(.22,.8,.35,1); }
+  .card:hover .cover img { transform: scale(1.045); }
+  .card, .artist-card, .gallery a { transition: transform .25s cubic-bezier(.22,.8,.35,1), border-color .2s; }
+  .card:hover, .artist-card:hover { transform: translateY(-3px); }
+  .gallery a:hover { transform: translateY(-2px); }
+  .btn { transition: background-color .2s, color .2s, border-color .2s; }
+  .site-nav a, .section-rail a, .rows a { transition: color .15s, background-color .15s, border-color .15s; }
+  .idr-lightbox { transition: opacity .25s; opacity: 0; }
+  .idr-lightbox.open { opacity: 1; }
+  .idr-lightbox img { animation: rise .3s both; }
+}
+
+/* ── Responsive ── */
+@media (max-width: 900px) {
+  .site-nav { margin-left: 0; width: 100%; }
+  .head-search { width: 100%; }
+  .head-search input[type=search] { width: 100%; }
+}
+@media (max-width: 800px) {
+  .hero .wrap { padding: 40px 20px 38px; }
+  .stats { gap: 12px 28px; margin-top: 26px; }
+  .stats strong { font-size: var(--fs-h3); }
+  .section-rail .wrap { flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch; padding-left: 0; padding-right: 0; }
+  .section-rail a { white-space: nowrap; }
+}
+@media (max-width: 640px) {
+  .wrap { padding-left: 16px; padding-right: 16px; }
+  :root { --fs-h2: 24px; }
+  .grid { grid-template-columns: repeat(auto-fill, minmax(132px, 1fr)); gap: 20px 14px; }
+  .section { padding: 34px 0; }
+  .record { gap: 24px; padding: 28px 0; }
+  .record .cover-block { max-width: 320px; }
+  .facts dl { grid-template-columns: 1fr; gap: 0; }
+  .facts dt { padding-top: 8px; }
+  .facts dd { margin-bottom: 2px; }
+  .gallery { grid-template-columns: repeat(auto-fill, minmax(92px, 1fr)); gap: 8px; }
+  .browse-filters select, .browse-filters input[type=search] { flex: 1 1 100%; min-width: 0; }
+  .site-foot .closer { font-size: 18px; padding-top: 26px; }
+  .artist-card img { width: 72px; height: 72px; }
+}
