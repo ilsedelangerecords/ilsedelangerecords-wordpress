@@ -31,17 +31,18 @@ add_action( 'wp_enqueue_scripts', function () {
 /** Vaste navigatie: de artiesten + hoofdingangen van het archief. */
 function idr_nav_items() {
 	$items = [
-		[ 'Releases', get_post_type_archive_link( 'idr_release' ) ],
-		[ 'Lyrics & songs', get_post_type_archive_link( 'idr_song' ) ],
+		[ __stm( 'nav.releases', 'Releases' ), get_post_type_archive_link( 'idr_release' ) ],
+		[ __stm( 'nav.songs', 'Lyrics & songs' ), get_post_type_archive_link( 'idr_song' ) ],
 	];
 	foreach ( [ 'ilse-delange', 'tcl-info' ] as $artist_id ) {
 		$post = function_exists( 'idr_post_by_idr_id' ) ? idr_post_by_idr_id( $artist_id ) : null;
 		if ( $post ) {
+			// Artiestnamen zijn eigennamen, niet vertaald.
 			$label = 'tcl-info' === $artist_id ? 'The Common Linnets' : 'Ilse DeLange';
 			$items[] = [ $label, get_permalink( $post ) ];
 		}
 	}
-	$items[] = [ 'Gastbijdragen', get_post_type_archive_link( 'idr_appearance' ) ];
+	$items[] = [ __stm( 'nav.appearances', 'Gastbijdragen' ), get_post_type_archive_link( 'idr_appearance' ) ];
 	return $items;
 }
 

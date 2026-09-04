@@ -17,21 +17,21 @@ $hero_src = 'https://www.youtube-nocookie.com/embed/' . $hero_videos[0]
 			title="" tabindex="-1" allow="autoplay; encrypted-media" frameborder="0"></iframe>
 	</div>
 	<div class="hero-scrim" aria-hidden="true"></div>
-	<button type="button" class="sound-toggle" id="idr-sound" aria-pressed="false">Geluid aan</button>
+	<button type="button" class="sound-toggle" id="idr-sound" aria-pressed="false"><?php echo esc_html( __stm( 'hero.sound_on', 'Geluid aan' ) ); ?></button>
 	<div class="wrap">
 		<div>
-			<p class="caps eyebrow">Het platenarchief &middot; sinds de eerste persing</p>
-			<h1>Elke release, elke persing, elke songtekst. <em>Gedocumenteerd.</em></h1>
-			<p>Het verzamelarchief van Ilse DeLange en The Common Linnets: albums, singles, live-registraties, promo-items en lyrics, met de hoezen en persingen uit de collectie.</p>
+			<p class="caps eyebrow"><?php echo esc_html( __stm( 'hero.eyebrow', 'Het platenarchief · sinds de eerste persing' ) ); ?></p>
+			<h1><?php echo wp_kses_post( __stm( 'hero.title', 'Elke release, elke persing, elke songtekst. <em>Gedocumenteerd.</em>' ) ); ?></h1>
+			<p><?php echo esc_html( __stm( 'hero.intro', 'Het verzamelarchief van Ilse DeLange en The Common Linnets: albums, singles, live-registraties, promo-items en lyrics, met de hoezen en persingen uit de collectie.' ) ); ?></p>
 			<p class="actions">
-				<a class="btn solid" href="<?php echo esc_url( get_post_type_archive_link( 'idr_release' ) ); ?>">Blader door de collectie</a>
-				<a class="btn" href="<?php echo esc_url( get_post_type_archive_link( 'idr_song' ) ); ?>">Lyrics &amp; songs</a>
+				<a class="btn solid" href="<?php echo esc_url( get_post_type_archive_link( 'idr_release' ) ); ?>"><?php echo esc_html( __stm( 'hero.browse', 'Blader door de collectie' ) ); ?></a>
+				<a class="btn" href="<?php echo esc_url( get_post_type_archive_link( 'idr_song' ) ); ?>"><?php echo esc_html( __stm( 'nav.songs', 'Lyrics & songs' ) ); ?></a>
 			</p>
 			<div class="stats">
 				<div><strong><?php echo $release_count; ?></strong><span>releases</span></div>
 				<div><strong><?php echo $song_count; ?></strong><span>songs</span></div>
-				<div><strong><?php echo $appearance_count; ?></strong><span>gastbijdragen</span></div>
-				<div><strong>3.236</strong><span>scans in de collectie</span></div>
+				<div><strong><?php echo $appearance_count; ?></strong><span><?php echo esc_html( __stm( 'nav.appearances', 'gastbijdragen' ) ); ?></span></div>
+				<div><strong>3.236</strong><span><?php echo esc_html( __stm( 'hero.scans', 'scans in de collectie' ) ); ?></span></div>
 			</div>
 		</div>
 		<div class="center-label" aria-hidden="true">
@@ -106,8 +106,8 @@ $hero_src = 'https://www.youtube-nocookie.com/embed/' . $hero_videos[0]
 		?>
 		<section class="section">
 			<div class="section-head">
-				<h2>Recent in de collectie</h2>
-				<a href="<?php echo esc_url( get_post_type_archive_link( 'idr_release' ) ); ?>">Alle <?php echo $release_count; ?> releases &rarr;</a>
+				<h2><?php echo esc_html( __stm( 'home.recent', 'Recent in de collectie' ) ); ?></h2>
+				<a href="<?php echo esc_url( get_post_type_archive_link( 'idr_release' ) ); ?>"><?php echo esc_html( sprintf( __stm( 'home.all_releases', 'Alle %d releases →' ), $release_count ) ); ?></a>
 			</div>
 			<div class="grid">
 				<?php foreach ( $recent as $p ) { idr_card( $p ); } ?>
@@ -128,8 +128,8 @@ $hero_src = 'https://www.youtube-nocookie.com/embed/' . $hero_videos[0]
 		?>
 		<section class="section">
 			<div class="section-head">
-				<h2>Songteksten</h2>
-				<a href="<?php echo esc_url( get_post_type_archive_link( 'idr_song' ) ); ?>">Alle songs &rarr;</a>
+				<h2><?php echo esc_html( __stm( 'home.lyrics_heading', 'Songteksten' ) ); ?></h2>
+				<a href="<?php echo esc_url( get_post_type_archive_link( 'idr_song' ) ); ?>"><?php echo esc_html( __stm( 'home.all_songs', 'Alle songs →' ) ); ?></a>
 			</div>
 			<ul class="rows">
 				<?php foreach ( $with_lyrics as $p ) { idr_song_row( $p ); } ?>

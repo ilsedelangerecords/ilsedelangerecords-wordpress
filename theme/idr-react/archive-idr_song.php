@@ -1,6 +1,6 @@
 <?php get_header(); ?>
 <div class="wrap">
-	<h1 class="page-title">Lyrics &amp; songs</h1>
+	<h1 class="page-title"><?php echo esc_html( __stm( 'nav.songs', 'Lyrics & songs' ) ); ?></h1>
 	<div id="idr-browse-root">
 		<noscript>
 			<ul class="rows">

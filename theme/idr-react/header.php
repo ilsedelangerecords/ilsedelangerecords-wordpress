@@ -20,8 +20,11 @@
 				<a href="<?php echo esc_url( $url ); ?>"><?php echo esc_html( $label ); ?></a>
 			<?php endforeach; ?>
 			<form class="head-search" role="search" method="get" action="<?php echo esc_url( home_url( '/' ) ); ?>">
-				<input type="search" name="s" placeholder="Zoek in het archief" value="<?php echo esc_attr( get_search_query() ); ?>">
+				<input type="search" name="s" placeholder="<?php echo esc_attr( function_exists( '__stm' ) ? __stm( 'search.placeholder', 'Zoek in het archief' ) : 'Zoek in het archief' ); ?>" value="<?php echo esc_attr( get_search_query() ); ?>">
 			</form>
+			<?php if ( class_exists( 'STM\LanguageSwitcher' ) ) : ?>
+				<?php STM\LanguageSwitcher::render( [ 'style' => 'buttons', 'show_flags' => false, 'show_names' => false ] ); ?>
+			<?php endif; ?>
 		</nav>
 	</div>
 </header>

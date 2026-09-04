@@ -10,7 +10,7 @@ $term = $profile['term'] ?? 'ilse-delange';
 $name = $profile['name'] ?? idr_display_title();
 ?>
 <div class="wrap">
-	<nav class="breadcrumbs"><a href="<?php echo esc_url( home_url( '/' ) ); ?>">Home</a> &rsaquo; <?php echo esc_html( $name ); ?></nav>
+	<nav class="breadcrumbs"><a href="<?php echo esc_url( home_url( '/' ) ); ?>"><?php echo esc_html( __stm( 'nav.home', 'Home' ) ); ?></a> &rsaquo; <?php echo esc_html( $name ); ?></nav>
 	<h1 class="page-title"><?php echo esc_html( $name ); ?></h1>
 	<?php if ( ! empty( $profile['tagline'] ) ) : ?><p class="byline"><?php echo esc_html( $profile['tagline'] ); ?></p><?php endif; ?>
 

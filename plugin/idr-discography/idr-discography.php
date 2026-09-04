@@ -9,6 +9,8 @@
 
 if ( ! defined( 'ABSPATH' ) ) { exit; }
 
+require_once __DIR__ . '/idr-i18n.php';
+
 const IDR_KINDS = [
 	'release'    => 'idr_release',
 	'song'       => 'idr_song',
@@ -80,7 +82,7 @@ const IDR_META_KEYS = [
 	'_idr_id', '_idr_kind', '_idr_year', '_idr_released_text', '_idr_label', '_idr_catalog_number',
 	'_idr_format', '_idr_spotify_url', '_idr_spotify_name', '_idr_cover', '_idr_media',
 	'_idr_info_html', '_idr_info_of', '_idr_related', '_idr_language', '_idr_has_lyrics',
-	'_idr_display_title', '_idr_legacy_filename', '_idr_source_description',
+	'_idr_display_title', '_idr_legacy_filename', '_idr_source_description', '_idr_variant_of',
 ];
 
 // ── Import-API ───────────────────────────────────────────────────────────────

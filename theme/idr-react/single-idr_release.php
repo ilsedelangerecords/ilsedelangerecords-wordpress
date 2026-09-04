@@ -1,8 +1,8 @@
 <?php get_header(); the_post(); ?>
 <div class="wrap">
 	<nav class="breadcrumbs">
-		<a href="<?php echo esc_url( home_url( '/' ) ); ?>">Home</a> &rsaquo;
-		<a href="<?php echo esc_url( get_post_type_archive_link( 'idr_release' ) ); ?>">Releases</a> &rsaquo;
+		<a href="<?php echo esc_url( home_url( '/' ) ); ?>"><?php echo esc_html( __stm( 'nav.home', 'Home' ) ); ?></a> &rsaquo;
+		<a href="<?php echo esc_url( get_post_type_archive_link( 'idr_release' ) ); ?>"><?php echo esc_html( __stm( 'nav.releases', 'Releases' ) ); ?></a> &rsaquo;
 		<?php echo esc_html( idr_display_title() ); ?>
 	</nav>
 	<article class="record">
@@ -36,7 +36,7 @@
 					?>
 				</dl>
 				<?php if ( idr_meta( 'spotify_url' ) ) : ?>
-					<p><a class="btn spotify-btn" href="<?php echo esc_url( idr_meta( 'spotify_url' ) ); ?>" rel="noopener">&#9654; Luister op Spotify</a></p>
+					<p><a class="btn spotify-btn" href="<?php echo esc_url( idr_meta( 'spotify_url' ) ); ?>" rel="noopener">&#9654; <?php echo esc_html( __stm( 'song.listen_spotify', 'Luister op Spotify' ) ); ?></a></p>
 				<?php endif; ?>
 			</div>
 

@@ -1,2 +1,4 @@
 ﻿import-payload.json
 .import-token
+__pycache__/
+*.pyc
