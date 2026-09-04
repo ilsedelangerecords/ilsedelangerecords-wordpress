@@ -73,6 +73,19 @@ add_action( 'init', function () {
 	}
 } );
 
+// Custom post-statussen zitten niet in WP_Query's ingebouwde default-statusset (publish/future/
+// draft/pending/private) -- zonder dit toont het standaard "Alle"-lijstscherm "Geen berichten
+// gevonden" ondanks een correct tellende (2)-badge, omdat de query zelf nog steeds op de core-
+// defaults filtert. Alleen van toepassing als er geen expliciete ?post_status-filter actief is
+// (de "Te beoordelen"/"Geaccepteerd"/"Afgewezen"-subsubsub-links werken daardoor al vanzelf goed).
+add_action( 'pre_get_posts', function ( $query ) {
+	if ( ! is_admin() || ! $query->is_main_query() ) { return; }
+	if ( 'idr_proposal' !== $query->get( 'post_type' ) ) { return; }
+	if ( empty( $_GET['post_status'] ) ) {
+		$query->set( 'post_status', [ 'idr_pending', 'idr_accepted', 'idr_rejected' ] );
+	}
+} );
+
 /** Pending-aantal als bubble bij het "Voorstellen"-menu, zelfde idee als WP's Reacties-teller. */
 add_action( 'admin_menu', function () {
 	global $menu;
