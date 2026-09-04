@@ -1,0 +1,239 @@
+<?php
+/**
+ * Caching Layer
+ *
+ * Uses WordPress Object Cache (wp_cache_*)
+ * Compatible with Redis/Memcached if installed
+ */
+
+namespace STM;
+
+class Cache {
+
+    /**
+     * Cache group for all translation data
+     */
+    const GROUP = 'stm_translations';
+
+    /**
+     * Cache TTL (1 hour)
+     */
+    const TTL = 3600;
+
+    /**
+     * Get translation from cache or database
+     *
+     * @param string $key Translation key
+     * @param string $lang Language code
+     * @param string $context Context (optional)
+     * @return string|null
+     */
+    public static function get_translation($key, $lang, $context = 'general') {
+        global $wpdb;
+
+        $cache_key = self::make_cache_key($key, $lang, $context);
+        $translation = wp_cache_get($cache_key, self::GROUP);
+
+        if (false !== $translation) {
+            return $translation;
+        }
+
+        // Cache miss - query database
+        $table_strings = $wpdb->prefix . 'stm_strings';
+        $table_translations = $wpdb->prefix . 'stm_translations';
+
+        $result = $wpdb->get_var($wpdb->prepare(
+            "SELECT t.translation
+            FROM {$table_translations} t
+            INNER JOIN {$table_strings} s ON t.string_id = s.id
+            WHERE s.string_key = %s
+            AND s.context = %s
+            AND t.language_code = %s
+            AND t.status = 'published'
+            LIMIT 1",
+            $key,
+            $context,
+            $lang
+        ));
+
+        // Store in cache (even if null, to avoid repeated DB queries)
+        wp_cache_set($cache_key, $result, self::GROUP, self::TTL);
+
+        return $result;
+    }
+
+    /**
+     * Get post field translation from cache or database
+     *
+     * @param int $post_id Post ID
+     * @param string $field Field name
+     * @param string $lang Language code
+     * @return string|null
+     */
+    public static function get_post_translation($post_id, $field, $lang) {
+        global $wpdb;
+
+        $cache_key = "post_{$post_id}_{$field}_{$lang}";
+        $translation = wp_cache_get($cache_key, self::GROUP);
+
+        if (false !== $translation) {
+            return $translation;
+        }
+
+        // Cache miss - query database
+        $table = $wpdb->prefix . 'stm_post_translations';
+
+        $result = $wpdb->get_var($wpdb->prepare(
+            "SELECT translation FROM {$table}
+            WHERE post_id = %d
+            AND field_name = %s
+            AND language_code = %s
+            LIMIT 1",
+            $post_id,
+            $field,
+            $lang
+        ));
+
+        // Log database errors (not empty results)
+        if ($wpdb->last_error) {
+            error_log("[STM] DB error getting translation for post {$post_id} field {$field}: " . $wpdb->last_error);
+        }
+
+        // Store in cache (even if null)
+        wp_cache_set($cache_key, $result ?: '', self::GROUP, self::TTL);
+
+        return $result ?: '';
+    }
+
+    /**
+     * Get field value translation from cache or database
+     *
+     * @param string $field Field name
+     * @param string $value Source (default-language) value
+     * @param string $lang Language code
+     * @return string Translation, or empty string when none exists
+     */
+    public static function get_field_value_translation($field, $value, $lang) {
+        global $wpdb;
+
+        $value_hash = md5($value);
+        $cache_key = "fieldvalue_{$field}_{$value_hash}_{$lang}";
+        $translation = wp_cache_get($cache_key, self::GROUP);
+
+        if (false !== $translation) {
+            return $translation;
+        }
+
+        $table = $wpdb->prefix . 'stm_field_value_translations';
+
+        $result = $wpdb->get_var($wpdb->prepare(
+            "SELECT translation FROM {$table}
+            WHERE field_name = %s
+            AND value_hash = %s
+            AND language_code = %s
+            LIMIT 1",
+            $field,
+            $value_hash,
+            $lang
+        ));
+
+        if ($wpdb->last_error) {
+            error_log("[STM] DB error getting field value translation for {$field}: " . $wpdb->last_error);
+        }
+
+        // Store in cache (empty string = known miss, avoids repeated queries)
+        wp_cache_set($cache_key, $result ?: '', self::GROUP, self::TTL);
+
+        return $result ?: '';
+    }
+
+    /**
+     * Invalidate cache for a field value (all languages)
+     *
+     * @param string $field Field name
+     * @param string $value Source value
+     */
+    public static function invalidate_field_value($field, $value) {
+        $value_hash = md5($value);
+        $languages = Database::get_languages();
+
+        foreach ($languages as $lang) {
+            wp_cache_delete("fieldvalue_{$field}_{$value_hash}_{$lang->code}", self::GROUP);
+        }
+    }
+
+    /**
+     * Invalidate cache for a specific string
+     *
+     * @param string $key Translation key
+     * @param string $context Context
+     */
+    public static function invalidate_string($key, $context = 'general') {
+        $languages = Database::get_languages();
+
+        foreach ($languages as $lang) {
+            $cache_key = self::make_cache_key($key, $lang->code, $context);
+            wp_cache_delete($cache_key, self::GROUP);
+        }
+    }
+
+    /**
+     * Invalidate cache for a post field
+     *
+     * @param int $post_id Post ID
+     * @param string $field Field name
+     */
+    public static function invalidate_post($post_id, $field = null) {
+        $languages = Database::get_languages();
+
+        if ($field) {
+            // Invalidate specific field
+            foreach ($languages as $lang) {
+                $cache_key = "post_{$post_id}_{$field}_{$lang->code}";
+                wp_cache_delete($cache_key, self::GROUP);
+            }
+        } else {
+            // Query which fields exist for this post and delete each targeted key
+            global $wpdb;
+            $fields = $wpdb->get_col($wpdb->prepare(
+                "SELECT DISTINCT field_name FROM {$wpdb->prefix}stm_post_translations WHERE post_id = %d",
+                $post_id
+            ));
+            foreach ($languages as $lang) {
+                foreach ($fields as $f) {
+                    wp_cache_delete("post_{$post_id}_{$f}_{$lang->code}", self::GROUP);
+                }
+            }
+        }
+    }
+
+    /**
+     * Make cache key
+     */
+    private static function make_cache_key($key, $lang, $context) {
+        return md5("{$context}:{$key}:{$lang}");
+    }
+
+    /**
+     * Flush all STM translation cache
+     *
+     * Uses a version key so only STM entries are invalidated — does NOT
+     * call wp_cache_flush() which would wipe a shared Redis/Memcached instance.
+     */
+    public static function flush_all() {
+        $version = (int) wp_cache_get('stm_cache_version', self::GROUP);
+        wp_cache_set('stm_cache_version', $version + 1, self::GROUP, 0);
+    }
+
+    /**
+     * Build a version-stamped cache key so flush_all() invalidates without a global flush
+     */
+    private static function versioned_key($raw_key) {
+        $version = wp_cache_get('stm_cache_version', self::GROUP);
+        if ($version === false) {
+            $version = 1;
+            wp_cache_set('stm_cache_version', $version, self::GROUP, 0);
+        }
+        return 'v' . $version . '_' . $raw_key;
+    }
+}
