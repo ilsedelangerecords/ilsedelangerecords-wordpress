@@ -54,6 +54,8 @@
 					</ul>
 				</section>
 			<?php endif; ?>
+
+			<?php if ( function_exists( 'idr_render_contribute_form' ) ) { idr_render_contribute_form(); } ?>
 		</div>
 	</article>
 </div>

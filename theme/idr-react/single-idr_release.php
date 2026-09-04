@@ -60,6 +60,8 @@
 			<?php endif; ?>
 
 			<?php idr_render_gallery(); ?>
+
+			<?php if ( function_exists( 'idr_render_contribute_form' ) ) { idr_render_contribute_form(); } ?>
 		</div>
 	</article>
 </div>

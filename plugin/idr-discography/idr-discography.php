@@ -10,6 +10,7 @@
 if ( ! defined( 'ABSPATH' ) ) { exit; }
 
 require_once __DIR__ . '/idr-i18n.php';
+require_once __DIR__ . '/idr-proposals.php';
 
 const IDR_KINDS = [
 	'release'    => 'idr_release',

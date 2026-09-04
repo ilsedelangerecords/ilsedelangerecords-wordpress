@@ -144,6 +144,21 @@ UI_STRINGS_EN_DE = {
     "song.listen_spotify": ("Listen on Spotify", "Auf Spotify hören"),
     "song.variants_heading": ("Also in the archive", "Auch im Archiv"),
     "song.related_heading": ("Related in the archive", "Verwandtes im Archiv"),
+    "contribute.heading": ("Add or correct something", "Etwas ergänzen oder korrigieren"),
+    "contribute.intro": (
+        "Spotted an error or something missing? The editors review every suggestion by hand, no account needed.",
+        "Einen Fehler entdeckt oder fehlt etwas? Die Redaktion prüft jeden Vorschlag von Hand, kein Konto nötig.",
+    ),
+    "contribute.sent": ("Thanks! Your suggestion is in the moderation queue.", "Danke! Dein Vorschlag steht in der Moderationswarteschlange."),
+    "contribute.ratelimited": ("Too many suggestions sent recently, please try again later.", "Zu viele Vorschläge kürzlich gesendet, bitte versuche es später erneut."),
+    "contribute.error": ("Something went wrong, please add an explanation and try again.", "Etwas ist schiefgelaufen, bitte gib eine Erklärung ein und versuche es erneut."),
+    "contribute.field_label": ("What's wrong or missing?", "Was stimmt nicht oder fehlt?"),
+    "contribute.value_label": ("Suggested value (if applicable)", "Vorgeschlagener Wert (falls zutreffend)"),
+    "contribute.message_label": ("Explanation", "Erklärung"),
+    "contribute.source_label": ("Source (link, optional)", "Quelle (Link, optional)"),
+    "contribute.name_label": ("Name (optional)", "Name (optional)"),
+    "contribute.email_label": ("Email (optional)", "E-Mail (optional)"),
+    "contribute.submit": ("Send suggestion", "Vorschlag senden"),
 }
 
 

@@ -7,6 +7,7 @@ add_action( 'after_setup_theme', function () {
 } );
 
 require_once __DIR__ . '/parts-gallery.php';
+require_once __DIR__ . '/parts-contribute.php';
 
 add_action( 'wp_enqueue_scripts', function () {
 	wp_enqueue_style( 'idr', get_stylesheet_uri(), [], wp_get_theme()->get( 'Version' ) );

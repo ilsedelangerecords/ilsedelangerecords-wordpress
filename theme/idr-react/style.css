@@ -240,6 +240,22 @@ main .btn:hover, .record .btn:hover { background: var(--vinyl); color: var(--pap
 .browse-filters :focus { outline: 2px solid var(--brass); outline-offset: 1px; }
 .browse-count { font-size: var(--fs-caps); letter-spacing: var(--track-caps); text-transform: uppercase; color: var(--ink-soft); align-self: center; }
 
+/* ── Community-bijdrage: "Vul aan / corrigeer" ── */
+.contribute-form { max-width: 560px; }
+.contribute-form p { margin: 0 0 16px; }
+.contribute-form label { display: block; font-size: var(--fs-caps); letter-spacing: var(--track-caps); text-transform: uppercase; color: var(--ink-soft); margin-bottom: 6px; }
+.contribute-form input, .contribute-form textarea, .contribute-form select {
+  width: 100%; border: 1px solid var(--line); background: var(--white); color: var(--ink);
+  padding: 9px 12px; font-size: var(--fs-meta); font-family: var(--grotesk);
+}
+.contribute-form textarea { resize: vertical; }
+.contribute-form :focus { outline: 2px solid var(--brass); outline-offset: 1px; }
+.contribute-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+@media (max-width: 480px) { .contribute-grid { grid-template-columns: 1fr; } }
+.hp-field { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+.contribute-notice { border-left: 3px solid var(--brass); padding: 10px 14px; margin: 0 0 18px; background: var(--white); font-size: var(--fs-meta); }
+.contribute-notice.error { border-left-color: var(--vinyl); }
+
 /* ── Footer: merkmoment ── */
 .site-foot { background: var(--vinyl); color: var(--paper); margin-top: 56px; }
 .site-foot .closer { font-family: var(--display); font-style: italic; font-weight: 400; font-size: var(--fs-h3); color: var(--brass); padding: 34px 24px 0; max-width: 1120px; margin: 0 auto; }
